@@ -18,8 +18,7 @@ import {
   ShieldCheck, 
   Package, 
   BookOpen, 
-  ArrowRight,
-  Flame
+  ArrowRight
 } from 'lucide-react';
 import { COMPONENTS_DATA } from './data/componentsData';
 import InstallGuide from './components/InstallGuide';
@@ -29,7 +28,6 @@ import ArchitectureDoc from './components/ArchitectureDoc';
 import PublishingWizard from './components/PublishingWizard';
 
 export default function App() {
-  // Show Installation Guide FIRST as requested
   const [activeTab, setActiveTab] = useState<'install' | 'components' | 'theming' | 'architecture' | 'publish'>('install');
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
   const [brandName, setBrandName] = useState<'lumina' | 'zenith' | 'primitives' | 'vela' | 'radian'>('lumina');
@@ -37,8 +35,10 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  const isDark = themeMode === 'dark';
+
   const brandNames = {
-    lumina: { display: 'Lumina UI', npm: '@lumina-ui/angular', prefix: 'lumina', tag: 'Illuminated, Clean & Accessible' },
+    lumina: { display: 'Lumina UI', npm: '@lumina-ui/angular', prefix: 'lumina', tag: 'Illuminated & Accessible Signals' },
     zenith: { display: 'Zenith UI', npm: '@zenith-ui/angular', prefix: 'zenith', tag: 'Peak Modern Angular Primitives' },
     primitives: { display: 'NGX Primitives', npm: '@ngx-primitives/ui', prefix: 'ngx', tag: 'Pure Headless + Tailwind' },
     vela: { display: 'Vela UI', npm: '@vela-ui/angular', prefix: 'vela', tag: 'Minimalist & High-Performance' },
@@ -57,41 +57,47 @@ export default function App() {
 
   return (
     <div className={`min-h-screen ${
-      themeMode === 'dark' ? 'bg-[#09090b] text-zinc-100' : 'bg-white text-zinc-900'
+      isDark ? 'bg-[#09090b] text-zinc-100' : 'bg-white text-zinc-900'
     } selection:bg-zinc-800 selection:text-zinc-100 transition-colors font-sans antialiased`}>
       
       {/* Top Navbar */}
       <header className={`border-b sticky top-0 z-50 backdrop-blur-md ${
-        themeMode === 'dark' 
-          ? 'border-zinc-800 bg-[#09090b]/80' 
-          : 'border-zinc-200 bg-white/80'
+        isDark ? 'border-zinc-800 bg-[#09090b]/80' : 'border-zinc-200 bg-white/80'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
           
           {/* Logo & Brand */}
           <div className="flex items-center gap-3">
-            <div className="h-7 w-7 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center font-black text-sm shadow-xs">
-              <Boxes className="w-4 h-4 text-zinc-950" />
+            <div className={`h-7 w-7 rounded-lg flex items-center justify-center font-black text-sm shadow-xs ${
+              isDark ? 'bg-zinc-100 text-zinc-950' : 'bg-zinc-900 text-white'
+            }`}>
+              <Boxes className="w-4 h-4" />
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-bold tracking-tight text-sm">{currentBrand.display}</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-400">
+              <span className={`font-bold tracking-tight text-sm ${isDark ? 'text-zinc-100' : 'text-zinc-900'}`}>
+                {currentBrand.display}
+              </span>
+              <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                isDark ? 'border-zinc-800 bg-zinc-900 text-zinc-400' : 'border-zinc-200 bg-zinc-100 text-zinc-600'
+              }`}>
                 Angular 19
               </span>
             </div>
           </div>
 
           {/* Quick Brand Selector in Nav */}
-          <div className="hidden lg:flex items-center bg-zinc-900 p-0.5 rounded-lg border border-zinc-800 text-[11px]">
-            <span className="text-zinc-500 px-2 font-medium">Brand:</span>
+          <div className={`hidden lg:flex items-center p-0.5 rounded-lg border text-[11px] ${
+            isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-zinc-100 border-zinc-200'
+          }`}>
+            <span className={`px-2 font-medium ${isDark ? 'text-zinc-500' : 'text-zinc-500'}`}>Brand:</span>
             {(['lumina', 'zenith', 'primitives', 'vela', 'radian'] as const).map((b) => (
               <button
                 key={b}
                 onClick={() => setBrandName(b)}
                 className={`px-2 py-0.5 rounded transition-all capitalize ${
                   brandName === b
-                    ? 'bg-zinc-100 text-zinc-950 font-bold shadow-xs'
-                    : 'text-zinc-400 hover:text-zinc-200'
+                    ? isDark ? 'bg-zinc-100 text-zinc-950 font-bold shadow-xs' : 'bg-white text-zinc-950 font-bold shadow-xs'
+                    : isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-zinc-600 hover:text-zinc-950'
                 }`}
               >
                 {b}
@@ -105,8 +111,8 @@ export default function App() {
               onClick={() => setActiveTab('install')}
               className={`px-3 py-1.5 rounded-md transition-all ${
                 activeTab === 'install' 
-                  ? 'bg-zinc-800 text-zinc-100 font-semibold' 
-                  : 'text-zinc-400 hover:text-zinc-100'
+                  ? isDark ? 'bg-zinc-800 text-zinc-100 font-semibold' : 'bg-zinc-100 text-zinc-950 font-semibold'
+                  : isDark ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-950'
               }`}
             >
               Installation
@@ -115,8 +121,8 @@ export default function App() {
               onClick={() => setActiveTab('components')}
               className={`px-3 py-1.5 rounded-md transition-all ${
                 activeTab === 'components' 
-                  ? 'bg-zinc-800 text-zinc-100 font-semibold' 
-                  : 'text-zinc-400 hover:text-zinc-100'
+                  ? isDark ? 'bg-zinc-800 text-zinc-100 font-semibold' : 'bg-zinc-100 text-zinc-950 font-semibold'
+                  : isDark ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-950'
               }`}
             >
               Components
@@ -125,8 +131,8 @@ export default function App() {
               onClick={() => setActiveTab('theming')}
               className={`px-3 py-1.5 rounded-md transition-all ${
                 activeTab === 'theming' 
-                  ? 'bg-zinc-800 text-zinc-100 font-semibold' 
-                  : 'text-zinc-400 hover:text-zinc-100'
+                  ? isDark ? 'bg-zinc-800 text-zinc-100 font-semibold' : 'bg-zinc-100 text-zinc-950 font-semibold'
+                  : isDark ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-950'
               }`}
             >
               Themes
@@ -135,8 +141,8 @@ export default function App() {
               onClick={() => setActiveTab('architecture')}
               className={`px-3 py-1.5 rounded-md transition-all ${
                 activeTab === 'architecture' 
-                  ? 'bg-zinc-800 text-zinc-100 font-semibold' 
-                  : 'text-zinc-400 hover:text-zinc-100'
+                  ? isDark ? 'bg-zinc-800 text-zinc-100 font-semibold' : 'bg-zinc-100 text-zinc-950 font-semibold'
+                  : isDark ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-950'
               }`}
             >
               Architecture
@@ -145,8 +151,8 @@ export default function App() {
               onClick={() => setActiveTab('publish')}
               className={`px-3 py-1.5 rounded-md transition-all ${
                 activeTab === 'publish' 
-                  ? 'bg-zinc-800 text-zinc-100 font-semibold' 
-                  : 'text-zinc-400 hover:text-zinc-100'
+                  ? isDark ? 'bg-zinc-800 text-zinc-100 font-semibold' : 'bg-zinc-100 text-zinc-950 font-semibold'
+                  : isDark ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-600 hover:text-zinc-950'
               }`}
             >
               Publishing
@@ -156,22 +162,24 @@ export default function App() {
           {/* Right Action Bar */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
+              onClick={() => setThemeMode(isDark ? 'light' : 'dark')}
               className={`p-1.5 rounded-md border text-xs transition-all ${
-                themeMode === 'dark' 
+                isDark 
                   ? 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white' 
                   : 'bg-zinc-100 border-zinc-300 text-zinc-600 hover:text-zinc-900'
               }`}
               title="Toggle Light/Dark Theme"
             >
-              {themeMode === 'dark' ? <Sun className="w-4 h-4 text-zinc-300" /> : <Moon className="w-4 h-4 text-zinc-700" />}
+              {isDark ? <Sun className="w-4 h-4 text-zinc-300" /> : <Moon className="w-4 h-4 text-zinc-700" />}
             </button>
 
             <button
               onClick={() => setActiveTab('components')}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-100 text-zinc-950 hover:bg-white text-xs font-semibold shadow-xs transition-all"
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all ${
+                isDark ? 'bg-zinc-100 text-zinc-950 hover:bg-white' : 'bg-zinc-900 text-white hover:bg-zinc-800'
+              }`}
             >
-              <span>Browse Components</span>
+              <span>Components</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -179,25 +187,35 @@ export default function App() {
       </header>
 
       {/* Hero Section */}
-      <section className={`border-b py-12 px-4 sm:px-6 relative overflow-hidden ${
-        themeMode === 'dark'
-          ? 'border-zinc-800/80 bg-gradient-to-b from-zinc-950 via-[#09090b] to-[#09090b]'
+      <section className={`border-b py-12 px-4 sm:px-6 relative overflow-hidden transition-colors ${
+        isDark 
+          ? 'border-zinc-800/80 bg-gradient-to-b from-zinc-950 via-[#09090b] to-[#09090b]' 
           : 'border-zinc-200 bg-gradient-to-b from-zinc-50 via-white to-white'
       }`}>
         <div className="max-w-5xl mx-auto text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border border-zinc-800 bg-zinc-900/60 text-zinc-300">
+          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border ${
+            isDark ? 'border-zinc-800 bg-zinc-900/60 text-zinc-300' : 'border-zinc-200 bg-zinc-100 text-zinc-800'
+          }`}>
             <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
             <span>{currentBrand.tag} &bull; Native Angular 18/19</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-zinc-100 max-w-3xl mx-auto leading-[1.1]">
+          <h1 className={`text-4xl sm:text-6xl font-black tracking-tight max-w-3xl mx-auto leading-[1.1] ${
+            isDark ? 'text-zinc-100' : 'text-zinc-900'
+          }`}>
             Build modern apps with{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-zinc-400 to-zinc-500">
+            <span className={`text-transparent bg-clip-text ${
+              isDark 
+                ? 'bg-gradient-to-r from-zinc-100 via-zinc-400 to-zinc-500' 
+                : 'bg-gradient-to-r from-zinc-900 via-zinc-700 to-zinc-500'
+            }`}>
               {currentBrand.display}
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+          <p className={`text-sm sm:text-base max-w-2xl mx-auto leading-relaxed ${
+            isDark ? 'text-zinc-400' : 'text-zinc-600'
+          }`}>
             A copyright-safe, modern open-source UI component library designed specifically for Angular applications. Built on Angular CDK and styled with Tailwind CSS.
           </p>
 
@@ -206,8 +224,8 @@ export default function App() {
               onClick={() => setActiveTab('install')}
               className={`px-4 py-2 rounded-md text-xs font-bold transition-all shadow-sm flex items-center gap-2 ${
                 activeTab === 'install'
-                  ? 'bg-zinc-100 text-zinc-950'
-                  : 'bg-zinc-900 border border-zinc-800 text-zinc-200 hover:bg-zinc-800'
+                  ? isDark ? 'bg-zinc-100 text-zinc-950' : 'bg-zinc-900 text-white'
+                  : isDark ? 'bg-zinc-900 border border-zinc-800 text-zinc-200 hover:bg-zinc-800' : 'bg-white border border-zinc-300 text-zinc-800 hover:bg-zinc-100'
               }`}
             >
               <Terminal className="w-3.5 h-3.5" />
@@ -218,8 +236,8 @@ export default function App() {
               onClick={() => setActiveTab('components')}
               className={`px-4 py-2 rounded-md text-xs font-bold transition-all shadow-sm flex items-center gap-2 ${
                 activeTab === 'components'
-                  ? 'bg-zinc-100 text-zinc-950'
-                  : 'bg-zinc-900 border border-zinc-800 text-zinc-200 hover:bg-zinc-800'
+                  ? isDark ? 'bg-zinc-100 text-zinc-950' : 'bg-zinc-900 text-white'
+                  : isDark ? 'bg-zinc-900 border border-zinc-800 text-zinc-200 hover:bg-zinc-800' : 'bg-white border border-zinc-300 text-zinc-800 hover:bg-zinc-100'
               }`}
             >
               <Boxes className="w-3.5 h-3.5" />
@@ -230,14 +248,14 @@ export default function App() {
       </section>
 
       {/* Main Tab Bar Navigation */}
-      <div className={`border-b ${themeMode === 'dark' ? 'border-zinc-800 bg-zinc-950' : 'border-zinc-200 bg-zinc-50'}`}>
+      <div className={`border-b transition-colors ${isDark ? 'border-zinc-800 bg-zinc-950' : 'border-zinc-200 bg-zinc-50'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex space-x-6 overflow-x-auto text-xs font-semibold">
           <button
             onClick={() => setActiveTab('install')}
             className={`py-3.5 border-b-2 flex items-center gap-2 transition-all whitespace-nowrap ${
               activeTab === 'install'
-                ? 'border-zinc-100 text-zinc-100 font-bold'
-                : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                ? isDark ? 'border-zinc-100 text-zinc-100 font-bold' : 'border-zinc-900 text-zinc-900 font-bold'
+                : isDark ? 'border-transparent text-zinc-400 hover:text-zinc-200' : 'border-transparent text-zinc-500 hover:text-zinc-900'
             }`}
           >
             <Terminal className="w-4 h-4" />
@@ -248,8 +266,8 @@ export default function App() {
             onClick={() => setActiveTab('components')}
             className={`py-3.5 border-b-2 flex items-center gap-2 transition-all whitespace-nowrap ${
               activeTab === 'components'
-                ? 'border-zinc-100 text-zinc-100 font-bold'
-                : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                ? isDark ? 'border-zinc-100 text-zinc-100 font-bold' : 'border-zinc-900 text-zinc-900 font-bold'
+                : isDark ? 'border-transparent text-zinc-400 hover:text-zinc-200' : 'border-transparent text-zinc-500 hover:text-zinc-900'
             }`}
           >
             <Boxes className="w-4 h-4" />
@@ -260,8 +278,8 @@ export default function App() {
             onClick={() => setActiveTab('theming')}
             className={`py-3.5 border-b-2 flex items-center gap-2 transition-all whitespace-nowrap ${
               activeTab === 'theming'
-                ? 'border-zinc-100 text-zinc-100 font-bold'
-                : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                ? isDark ? 'border-zinc-100 text-zinc-100 font-bold' : 'border-zinc-900 text-zinc-900 font-bold'
+                : isDark ? 'border-transparent text-zinc-400 hover:text-zinc-200' : 'border-transparent text-zinc-500 hover:text-zinc-900'
             }`}
           >
             <Palette className="w-4 h-4" />
@@ -272,8 +290,8 @@ export default function App() {
             onClick={() => setActiveTab('architecture')}
             className={`py-3.5 border-b-2 flex items-center gap-2 transition-all whitespace-nowrap ${
               activeTab === 'architecture'
-                ? 'border-zinc-100 text-zinc-100 font-bold'
-                : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                ? isDark ? 'border-zinc-100 text-zinc-100 font-bold' : 'border-zinc-900 text-zinc-900 font-bold'
+                : isDark ? 'border-transparent text-zinc-400 hover:text-zinc-200' : 'border-transparent text-zinc-500 hover:text-zinc-900'
             }`}
           >
             <Layers className="w-4 h-4" />
@@ -284,8 +302,8 @@ export default function App() {
             onClick={() => setActiveTab('publish')}
             className={`py-3.5 border-b-2 flex items-center gap-2 transition-all whitespace-nowrap ${
               activeTab === 'publish'
-                ? 'border-zinc-100 text-zinc-100 font-bold'
-                : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                ? isDark ? 'border-zinc-100 text-zinc-100 font-bold' : 'border-zinc-900 text-zinc-900 font-bold'
+                : isDark ? 'border-transparent text-zinc-400 hover:text-zinc-200' : 'border-transparent text-zinc-500 hover:text-zinc-900'
             }`}
           >
             <Package className="w-4 h-4" />
@@ -298,12 +316,16 @@ export default function App() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         {/* TAB 1: INSTALLATION GUIDE FIRST */}
         {activeTab === 'install' && (
-          <InstallGuide onExploreComponents={() => setActiveTab('components')} />
+          <InstallGuide 
+            themeMode={themeMode} 
+            onExploreComponents={() => setActiveTab('components')} 
+          />
         )}
 
         {/* TAB 2: COMPONENTS & CODE */}
         {activeTab === 'components' && (
           <ComponentViewer
+            themeMode={themeMode}
             components={searchedComponents}
             selectedComponent={selectedComponent}
             onSelectComponent={(c) => setSelectedCompId(c.id)}
@@ -318,22 +340,28 @@ export default function App() {
         )}
 
         {/* TAB 4: ARCHITECTURE BLUEPRINT */}
-        {activeTab === 'architecture' && <ArchitectureDoc />}
+        {activeTab === 'architecture' && (
+          <ArchitectureDoc themeMode={themeMode} />
+        )}
 
         {/* TAB 5: PUBLISHING WIZARD */}
-        {activeTab === 'publish' && <PublishingWizard />}
+        {activeTab === 'publish' && (
+          <PublishingWizard themeMode={themeMode} />
+        )}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 bg-[#09090b] py-8 text-xs text-zinc-500">
+      <footer className={`border-t py-8 text-xs transition-colors ${
+        isDark ? 'border-zinc-800 bg-[#09090b] text-zinc-500' : 'border-zinc-200 bg-zinc-50 text-zinc-600'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-zinc-400">shadcn/angular</span>
+            <span className={`font-semibold ${isDark ? 'text-zinc-400' : 'text-zinc-800'}`}>{currentBrand.display}</span>
             <span>&bull;</span>
-            <span>Open Source UI Library</span>
+            <span>Angular Open Source UI Library</span>
           </div>
           <p>
-            Standalone Components &bull; Signals &bull; Angular CDK &bull; Tailwind CSS
+            Standalone Signals &bull; Angular CDK &bull; Tailwind CSS &bull; Zoneless Native
           </p>
         </div>
       </footer>

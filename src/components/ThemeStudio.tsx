@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Palette, Copy, Check, Sparkles, Moon, Sun, RefreshCw } from 'lucide-react';
+import { Palette, Copy, Check, Moon, Sun } from 'lucide-react';
 
 interface ThemePreset {
   name: string;
@@ -29,6 +29,7 @@ export default function ThemeStudio({
   themeMode: 'dark' | 'light';
   setThemeMode: (mode: 'dark' | 'light') => void;
 }) {
+  const isDark = themeMode === 'dark';
   const [selectedPreset, setSelectedPreset] = useState<string>('indigo');
   const [primaryHsl, setPrimaryHsl] = useState<string>(PRESETS.indigo.primary);
   const [borderRadius, setBorderRadius] = useState<string>('0.5rem');
@@ -48,20 +49,20 @@ export default function ThemeStudio({
 
   const generatedCss = `/* Custom Design Tokens for Angular UI Library */
 :root {
-  --background: ${themeMode === 'light' ? '0 0% 100%' : '222.2 84% 4.9%'};
-  --foreground: ${themeMode === 'light' ? '222.2 84% 4.9%' : '210 40% 98%'};
-  --card: ${themeMode === 'light' ? '0 0% 100%' : '222.2 84% 4.9%'};
-  --card-foreground: ${themeMode === 'light' ? '222.2 84% 4.9%' : '210 40% 98%'};
+  --background: ${themeMode === 'light' ? '0 0% 100%' : '240 10% 3.9%'};
+  --foreground: ${themeMode === 'light' ? '240 10% 3.9%' : '0 0% 98%'};
+  --card: ${themeMode === 'light' ? '0 0% 100%' : '240 10% 3.9%'};
+  --card-foreground: ${themeMode === 'light' ? '240 10% 3.9%' : '0 0% 98%'};
   --primary: ${primaryHsl};
-  --primary-foreground: ${themeMode === 'light' ? '210 40% 98%' : '222.2 47.4% 11.2%'};
-  --secondary: ${themeMode === 'light' ? '210 40% 96.1%' : '217.2 32.6% 17.5%'};
-  --secondary-foreground: ${themeMode === 'light' ? '222.2 47.4% 11.2%' : '210 40% 98%'};
-  --muted: ${themeMode === 'light' ? '210 40% 96.1%' : '217.2 32.6% 17.5%'};
-  --muted-foreground: ${themeMode === 'light' ? '215.4 16.3% 46.9%' : '215 20.2% 65.1%'};
+  --primary-foreground: ${themeMode === 'light' ? '0 0% 98%' : '240 5.9% 10%'};
+  --secondary: ${themeMode === 'light' ? '240 4.8% 95.9%' : '240 3.7% 15.9%'};
+  --secondary-foreground: ${themeMode === 'light' ? '240 5.9% 10%' : '0 0% 98%'};
+  --muted: ${themeMode === 'light' ? '240 4.8% 95.9%' : '240 3.7% 15.9%'};
+  --muted-foreground: ${themeMode === 'light' ? '240 3.8% 46.1%' : '240 5% 64.9%'};
   --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: ${themeMode === 'light' ? '214.3 31.8% 91.4%' : '217.2 32.6% 17.5%'};
-  --input: ${themeMode === 'light' ? '214.3 31.8% 91.4%' : '217.2 32.6% 17.5%'};
+  --destructive-foreground: 0 0% 98%;
+  --border: ${themeMode === 'light' ? '240 5.9% 90%' : '240 3.7% 15.9%'};
+  --input: ${themeMode === 'light' ? '240 5.9% 90%' : '240 3.7% 15.9%'};
   --ring: ${primaryHsl};
   --radius: ${borderRadius};
 }`;
@@ -70,26 +71,30 @@ export default function ThemeStudio({
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       {/* Controls */}
       <div className="lg:col-span-5 space-y-6">
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+        <div className={`border rounded-2xl p-6 transition-colors ${
+          isDark ? 'bg-zinc-900/60 border-zinc-800' : 'bg-white border-zinc-200 shadow-xs'
+        }`}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <Palette className="w-5 h-5 text-indigo-400" />
+            <h3 className={`text-base font-bold flex items-center gap-2 ${isDark ? 'text-zinc-100' : 'text-zinc-900'}`}>
+              <Palette className="w-5 h-5 text-indigo-500" />
               <span>Theme Studio &amp; Token Customizer</span>
             </h3>
 
             {/* Dark/Light toggle */}
             <button
-              onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-medium text-slate-300 hover:text-white"
+              onClick={() => setThemeMode(isDark ? 'light' : 'dark')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
+                isDark ? 'bg-zinc-950 border-zinc-800 text-zinc-300 hover:text-white' : 'bg-zinc-100 border-zinc-300 text-zinc-700 hover:text-zinc-900'
+              }`}
             >
-              {themeMode === 'dark' ? (
+              {isDark ? (
                 <>
                   <Moon className="w-3.5 h-3.5 text-indigo-400" />
                   <span>Dark</span>
                 </>
               ) : (
                 <>
-                  <Sun className="w-3.5 h-3.5 text-amber-400" />
+                  <Sun className="w-3.5 h-3.5 text-amber-500" />
                   <span>Light</span>
                 </>
               )}
@@ -99,7 +104,9 @@ export default function ThemeStudio({
           {/* Preset buttons */}
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className={`block text-xs font-semibold uppercase tracking-wider mb-2 ${
+                isDark ? 'text-zinc-400' : 'text-zinc-600'
+              }`}>
                 Color Presets
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -109,8 +116,8 @@ export default function ThemeStudio({
                     onClick={() => applyPreset(key)}
                     className={`p-2.5 rounded-xl border text-xs font-medium text-left flex items-center gap-2 transition-all ${
                       selectedPreset === key
-                        ? 'bg-slate-800 border-indigo-500 text-white shadow-sm'
-                        : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                        ? isDark ? 'bg-zinc-800 border-zinc-500 text-white shadow-xs' : 'bg-zinc-100 border-zinc-400 text-zinc-900 shadow-xs font-bold'
+                        : isDark ? 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:border-zinc-700' : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
                     }`}
                   >
                     <span 
@@ -125,23 +132,31 @@ export default function ThemeStudio({
 
             {/* Primary HSL Token Input */}
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-                Primary Color Token (<code className="text-indigo-300 font-mono">--primary</code>)
+              <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${
+                isDark ? 'text-zinc-400' : 'text-zinc-600'
+              }`}>
+                Primary Color Token (<code className="font-mono">--primary</code>)
               </label>
               <input
                 type="text"
                 value={primaryHsl}
                 onChange={(e) => setPrimaryHsl(e.target.value)}
                 placeholder="243 75% 59%"
-                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-indigo-500"
+                className={`w-full border rounded-xl px-3 py-2 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-zinc-400 ${
+                  isDark ? 'bg-zinc-950 border-zinc-700 text-white' : 'bg-white border-zinc-300 text-zinc-900'
+                }`}
               />
-              <p className="text-[11px] text-slate-500 mt-1">Specify HSL values without hsl() wrapper for opacity modulation (e.g. <code className="text-slate-400">bg-primary/90</code>).</p>
+              <p className={`text-[11px] mt-1 ${isDark ? 'text-zinc-500' : 'text-zinc-500'}`}>
+                Specify HSL values without hsl() wrapper for opacity modulation (e.g. <code className="font-mono">bg-primary/90</code>).
+              </p>
             </div>
 
             {/* Border Radius */}
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-                Border Radius (<code className="text-indigo-300 font-mono">--radius</code>)
+              <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${
+                isDark ? 'text-zinc-400' : 'text-zinc-600'
+              }`}>
+                Border Radius (<code className="font-mono">--radius</code>)
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {['0rem', '0.375rem', '0.5rem', '0.75rem'].map((rad) => (
@@ -150,8 +165,8 @@ export default function ThemeStudio({
                     onClick={() => setBorderRadius(rad)}
                     className={`py-2 px-2 rounded-lg border text-xs font-mono transition-all ${
                       borderRadius === rad
-                        ? 'bg-indigo-600/30 border-indigo-500 text-indigo-300'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
+                        ? isDark ? 'bg-zinc-100 text-zinc-950 font-bold' : 'bg-zinc-900 text-white font-bold'
+                        : isDark ? 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700' : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
                     }`}
                   >
                     {rad === '0rem' ? 'None' : rad}
@@ -163,18 +178,24 @@ export default function ThemeStudio({
         </div>
 
         {/* Live CSS Export Box */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+        <div className={`border rounded-2xl p-6 transition-colors ${
+          isDark ? 'bg-zinc-900/60 border-zinc-800' : 'bg-white border-zinc-200 shadow-xs'
+        }`}>
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">Exportable tokens.css</span>
+            <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+              Exportable tokens.css
+            </span>
             <button
               onClick={() => copyCode(generatedCss, 'css')}
-              className="text-xs text-indigo-300 hover:text-white flex items-center gap-1.5 bg-indigo-600/20 px-2.5 py-1 rounded-md border border-indigo-500/30"
+              className={`text-xs flex items-center gap-1.5 px-2.5 py-1 rounded-md border transition-colors ${
+                isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-200 hover:text-white' : 'bg-zinc-100 border-zinc-300 text-zinc-700 hover:text-zinc-950'
+              }`}
             >
-              {copiedKey === 'css' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              {copiedKey === 'css' ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copiedKey === 'css' ? 'Copied!' : 'Copy CSS'}</span>
             </button>
           </div>
-          <pre className="bg-slate-950 p-3 rounded-xl border border-slate-800 text-[11px] font-mono text-indigo-200 overflow-x-auto max-h-48 leading-relaxed">
+          <pre className="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-[11px] font-mono text-zinc-200 overflow-x-auto max-h-48 leading-relaxed">
             {generatedCss}
           </pre>
         </div>
@@ -183,21 +204,21 @@ export default function ThemeStudio({
       {/* Real-time Theme Preview */}
       <div className="lg:col-span-7 space-y-6">
         <div 
-          className="rounded-2xl border p-6 transition-all shadow-xl"
+          className="rounded-2xl border p-6 transition-all shadow-sm"
           style={{
-            backgroundColor: themeMode === 'light' ? '#ffffff' : '#0b0f19',
-            borderColor: themeMode === 'light' ? '#e2e8f0' : '#1e293b',
-            color: themeMode === 'light' ? '#0f172a' : '#f8fafc',
+            backgroundColor: themeMode === 'light' ? '#ffffff' : '#09090b',
+            borderColor: themeMode === 'light' ? '#e4e4e7' : '#27272a',
+            color: themeMode === 'light' ? '#09090b' : '#fafafa',
             borderRadius: borderRadius
           }}
         >
-          <div className="flex items-center justify-between pb-4 border-b" style={{ borderColor: themeMode === 'light' ? '#e2e8f0' : '#1e293b' }}>
+          <div className="flex items-center justify-between pb-4 border-b" style={{ borderColor: themeMode === 'light' ? '#e4e4e7' : '#27272a' }}>
             <div>
               <h4 className="font-bold text-base">Live Theme Applied Preview</h4>
               <p className="text-xs opacity-70">Components reacting to modified CSS variable tokens</p>
             </div>
             <span 
-              className="text-xs px-2.5 py-1 rounded-full font-semibold text-white shadow-sm"
+              className="text-xs px-2.5 py-1 rounded-full font-semibold text-white shadow-xs"
               style={{ backgroundColor: `hsl(${primaryHsl})`, borderRadius: borderRadius }}
             >
               Active Brand
@@ -220,9 +241,10 @@ export default function ThemeStudio({
                 <button
                   className="px-4 py-2 text-sm font-semibold border transition-all"
                   style={{ 
-                    borderColor: themeMode === 'light' ? '#cbd5e1' : '#334155',
+                    borderColor: themeMode === 'light' ? '#e4e4e7' : '#27272a',
                     borderRadius: borderRadius,
-                    backgroundColor: themeMode === 'light' ? '#f1f5f9' : '#1e293b'
+                    backgroundColor: themeMode === 'light' ? '#f4f4f5' : '#18181b',
+                    color: themeMode === 'light' ? '#09090b' : '#fafafa'
                   }}
                 >
                   Secondary
@@ -232,7 +254,8 @@ export default function ThemeStudio({
                   style={{ 
                     borderColor: `hsl(${primaryHsl})`,
                     color: `hsl(${primaryHsl})`,
-                    borderRadius: borderRadius
+                    borderRadius: borderRadius,
+                    backgroundColor: 'transparent'
                   }}
                 >
                   Outline
@@ -249,13 +272,13 @@ export default function ThemeStudio({
                 <input
                   type="text"
                   readOnly
-                  value="user@acme-corp.com"
+                  value="user@lumina.dev"
                   className="w-full px-3.5 py-2 text-sm border focus:outline-none"
                   style={{ 
                     borderRadius: borderRadius,
-                    borderColor: themeMode === 'light' ? '#cbd5e1' : '#334155',
-                    backgroundColor: themeMode === 'light' ? '#ffffff' : '#020617',
-                    color: themeMode === 'light' ? '#0f172a' : '#f8fafc'
+                    borderColor: themeMode === 'light' ? '#e4e4e7' : '#27272a',
+                    backgroundColor: themeMode === 'light' ? '#ffffff' : '#09090b',
+                    color: themeMode === 'light' ? '#09090b' : '#fafafa'
                   }}
                 />
               </div>
@@ -275,13 +298,15 @@ export default function ThemeStudio({
                     className="px-2.5 py-0.5 text-xs font-semibold border"
                     style={{ 
                       borderRadius: borderRadius,
-                      borderColor: themeMode === 'light' ? '#cbd5e1' : '#334155'
+                      borderColor: themeMode === 'light' ? '#e4e4e7' : '#27272a',
+                      backgroundColor: themeMode === 'light' ? '#f4f4f5' : '#18181b',
+                      color: themeMode === 'light' ? '#09090b' : '#fafafa'
                     }}
                   >
                     Default
                   </span>
                   <span 
-                    className="px-2.5 py-0.5 text-xs font-semibold bg-rose-600 text-white"
+                    className="px-2.5 py-0.5 text-xs font-semibold bg-red-600 text-white"
                     style={{ borderRadius: borderRadius }}
                   >
                     Destructive
@@ -292,18 +317,18 @@ export default function ThemeStudio({
 
             {/* Card preview */}
             <div 
-              className="p-5 border shadow-sm transition-all"
+              className="p-5 border shadow-xs transition-all"
               style={{ 
                 borderRadius: borderRadius,
-                borderColor: themeMode === 'light' ? '#e2e8f0' : '#1e293b',
-                backgroundColor: themeMode === 'light' ? '#f8fafc' : '#0f172a'
+                borderColor: themeMode === 'light' ? '#e4e4e7' : '#27272a',
+                backgroundColor: themeMode === 'light' ? '#fafafa' : '#18181b'
               }}
             >
               <h5 className="font-bold text-sm mb-1">Card Container Component</h5>
               <p className="text-xs opacity-75 mb-3 leading-relaxed">
-                Notice how the card border radius and inner accents dynamically follow your token choices.
+                The card border radius and inner accents dynamically follow your token choices in both light and dark modes.
               </p>
-              <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: themeMode === 'light' ? '#e2e8f0' : '#1e293b' }}>
+              <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: themeMode === 'light' ? '#e4e4e7' : '#27272a' }}>
                 <span className="text-xs opacity-60">Angular Standalone UI</span>
                 <button
                   className="text-xs font-semibold"
