@@ -1,0 +1,6 @@
+{
+  "name": "Angular OSS UI Library Architect",
+  "description": "Complete blueprint, configuration generator, and guide for building and publishing open-source Angular UI libraries compatible with npm, pnpm, and bun.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
