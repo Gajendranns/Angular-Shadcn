@@ -151,6 +151,36 @@ export default function ArchitectureDoc({
                 </p>
               </div>
             </div>
+
+            {/* Signals vs OnPush & Zone.js Comparison Card */}
+            <div className={`mt-6 p-5 rounded-xl border space-y-3 ${
+              isDark ? 'bg-zinc-950 border-emerald-900/40 text-zinc-200' : 'bg-emerald-50/50 border-emerald-200 text-zinc-900'
+            }`}>
+              <div className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-emerald-500" />
+                <h3 className="font-bold text-sm">Why Pure Signals Beat Legacy ChangeDetectionStrategy.OnPush &amp; Zone.js</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div className={`p-3 rounded-lg border ${isDark ? 'bg-zinc-900/60 border-zinc-800' : 'bg-white border-zinc-200 shadow-xs'}`}>
+                  <div className="font-bold text-red-500 mb-1">❌ Legacy Zone.js</div>
+                  <p className="text-zinc-500 leading-relaxed">
+                    Monkey-patches DOM events and async timers. Re-runs change detection across the entire component tree from the root, leading to wasted CPU cycles.
+                  </p>
+                </div>
+                <div className={`p-3 rounded-lg border ${isDark ? 'bg-zinc-900/60 border-zinc-800' : 'bg-white border-zinc-200 shadow-xs'}`}>
+                  <div className="font-bold text-amber-500 mb-1">⚠️ Legacy OnPush</div>
+                  <p className="text-zinc-500 leading-relaxed">
+                    Requires manually injecting <code className="font-mono">ChangeDetectorRef</code>, remembering to call <code className="font-mono">markForCheck()</code>, or relying solely on immutable inputs, making async state updates error-prone.
+                  </p>
+                </div>
+                <div className={`p-3 rounded-lg border ${isDark ? 'bg-zinc-900/90 border-emerald-800/60' : 'bg-white border-emerald-300 shadow-xs'}`}>
+                  <div className="font-bold text-emerald-600 dark:text-emerald-400 mb-1">✅ Modern Pure Signals (This Library)</div>
+                  <p className="text-zinc-500 leading-relaxed">
+                    Angular's reactive signal graph automatically marks ONLY the affected template node dirty! Native in Angular 18/19 with <code className="font-mono">provideExperimentalZonelessChangeDetection()</code>.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

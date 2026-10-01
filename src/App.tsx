@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Boxes, 
   Layers, 
@@ -18,7 +18,8 @@ import {
   ShieldCheck, 
   Package, 
   BookOpen, 
-  ArrowRight
+  ArrowRight,
+  Zap
 } from 'lucide-react';
 import { COMPONENTS_DATA } from './data/componentsData';
 import InstallGuide from './components/InstallGuide';
@@ -36,6 +37,17 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const isDark = themeMode === 'dark';
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add('dark');
+      document.body.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+      document.body.classList.remove('dark');
+    }
+  }, [isDark]);
 
   const brandNames = {
     lumina: { display: 'Lumina UI', npm: '@lumina-ui/angular', prefix: 'lumina', tag: 'Illuminated & Accessible Signals' },
@@ -57,7 +69,7 @@ export default function App() {
 
   return (
     <div className={`min-h-screen ${
-      isDark ? 'bg-[#09090b] text-zinc-100' : 'bg-white text-zinc-900'
+      isDark ? 'dark bg-[#09090b] text-zinc-100' : 'bg-white text-zinc-900'
     } selection:bg-zinc-800 selection:text-zinc-100 transition-colors font-sans antialiased`}>
       
       {/* Top Navbar */}
